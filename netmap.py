@@ -1,6 +1,15 @@
 #!/usr/bin/env python
 
 import scapy.all as scapy
+import optparse
+
+def get_arguments():
+    parser = optparse.OptionParser()
+    parser.add_option("-t", "--target", dest="target", help="Target IP address / IP range")
+    options, args = parser.parse_args()
+    if not options.target:
+        parser.error("[-] Please specify a target IP address")
+    return options
 
 def scan(ip):
     arp_request = scapy.ARP(pdst=ip)
@@ -19,6 +28,6 @@ def print_netmap(client_list):
     for element in client_list:
         print(element["ip"] + "\t\t" + element["mac"])
 
-ip = raw_input("\nEnter IP to scan: ")
-client_list = scan(ip)
+options = get_arguments()
+client_list = scan(options.target)
 print_netmap(client_list)
