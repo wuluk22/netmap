@@ -8,9 +8,17 @@ def scan(ip):
     arp_request_broadcast = broadcast/arp_request
     answered_list = scapy.srp(arp_request_broadcast, timeout=1, verbose=False)[0]
 
-    print("\nIP\t\t\tMAC address\n-----------------------------------")
+    client_list = []
     for element in answered_list:
-        print(element[1].psrc + "\t\t" + element[1].hwsrc)
+        client_dict = {"ip": element[1].psrc, "mac": element[1].hwsrc}
+        client_list.append(client_dict)
+    return client_list
+
+def print_netmap(client_list):
+    print("\nIP\t\t\tMAC address\n-----------------------------------")
+    for element in client_list:
+        print(element["ip"] + "\t\t" + element["mac"])
 
 ip = raw_input("\nEnter IP to scan: ")
-scan(ip)
+client_list = scan(ip)
+print_netmap(client_list)
